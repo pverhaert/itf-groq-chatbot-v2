@@ -22,8 +22,12 @@ localS = LocalStorage()
 # ----------------------------------------------
 # Init session states
 # ----------------------------------------------
+if "groq_api_key" in localS.storedItems:
+    groq_api_key = localS.getItem("groq_api_key")
+else:
+    groq_api_key = os.getenv("GROQ_API_KEY") or None
 default_states = {
-    "groq_api_key": localS.getItem("GRQ_API_KEY") or os.getenv("GROQ_API_KEY") or None,
+    "groq_api_key": groq_api_key,
     "preferred_model": localS.getItem("preferred_model") or "llama-3.1-70b-versatile",
     "all_models": [],
     "personality": "Default",
