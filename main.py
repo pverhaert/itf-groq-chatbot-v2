@@ -18,6 +18,8 @@ load_dotenv()
 
 # local_storage
 localS = LocalStorage()
+if localS.storedItems is None:
+        localS.storedItems = {}
 
 # ----------------------------------------------
 # Init session states
