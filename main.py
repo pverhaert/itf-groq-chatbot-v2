@@ -42,10 +42,10 @@ for key, value in default_states.items():
 @st.cache_data
 def fetch_models():
     os.write(1, b"Fetching models...\n")
-    st.text('**************************')
-    st.text(st.session_state.groq_api_key)
-    st.text(st.session_state.preferred_model)
-    st.text('**************************')
+    # st.text('**************************')
+    # st.text(st.session_state.groq_api_key)
+    # st.text(st.session_state.preferred_model)
+    # st.text('**************************')
     api_key = st.session_state.groq_api_key
     if not api_key:
         os.write(1, b"API key not found\n")
@@ -103,7 +103,7 @@ def main():
                 st.rerun()
         # Add settings to the sidebar
         try:
-            pref_model = 'not-found'
+            pref_model = st.session_state.preferred_model
             index = st.session_state.all_models.index(pref_model)
         except ValueError:
             index = 0
