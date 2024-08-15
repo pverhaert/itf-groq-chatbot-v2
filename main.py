@@ -1,4 +1,3 @@
-import textwrap
 import os
 import requests
 import groq
@@ -33,24 +32,12 @@ for key, value in default_states.items():
 # -------------------
 # Functions
 # -------------------
-# def update_delete_api_key(api_key):
-#   if api_key:
-#       st.session_state.groq_api_key = api_key
-#   else:
-#       st.session_state.groq_api_key = None
-
 @st.cache_data
 def fetch_models():
     os.write(1, b"Fetching models...\n")
-    # st.text('**************************')
-    # st.text(st.session_state.groq_api_key)
-    # st.text(st.session_state.preferred_model)
-    # st.text('**************************')
     api_key = st.session_state.groq_api_key
     if not api_key:
-        os.write(1, b"API key not found\n")
         return []
-
     headers = {
         "Authorization": f"Bearer {api_key}"
     }
@@ -68,7 +55,8 @@ def fetch_models():
 
 
 def update_session_states():
-    sys_prompt = textwrap.dedent(personas[st.session_state.personality])
+    sys_prompt = personas[st.session_state.personality]
+    st.write(sys_prompt)
     if len(st.session_state.messages) > 0:
         st.session_state.messages[0]["content"] = sys_prompt
     else:
@@ -135,7 +123,7 @@ def main():
         client = groq.Groq(
             api_key=st.session_state.groq_api_key,
         )
-        # New prompt entered
+        # This runs every time the user submits a prompt
         if prompt := st.chat_input():
             st.session_state.messages.append(
                 {"role": "user", "content": prompt}
@@ -148,14 +136,14 @@ def main():
                 max_tokens=4096,
                 messages=st.session_state.messages
             )
-            # Stream completion
+            # Stream completion to the browser
             with st.chat_message("assistant"):
                 response = st.write_stream(stream_response(completion))
-            # Add completion to messages
+            # Add finale response to the chat history
             st.session_state.messages.append({"role": "assistant", "content": response})
 
 
 if __name__ == "__main__":
     main()
 # Debug: Display session state
-st.write(st.session_state)
+# st.write(st.session_state)
