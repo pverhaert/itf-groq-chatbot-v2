@@ -21,7 +21,7 @@ load_dotenv()
 # -------------------
 default_states = {
     "groq_api_key": os.getenv("GROQ_API_KEY", None),
-    "preferred_model": os.getenv("PREFERRED_MODEL", "not-set-in-env"),
+    "preferred_model": os.getenv("PREFERRED_MODEL", "llama-3.1-70b-versatile"),
     "all_models": [],
     "personality": "General Chatbot",
     "temperature": 0.2,
@@ -108,7 +108,7 @@ def main():
             index = st.session_state.all_models.index(st.session_state.preferred_model)
         except ValueError:
             index = 0
-        # st.selectbox("Select Preferred Model", st.session_state.all_models, key="preferred_model", index=index)
+        st.selectbox("Select Preferred Model", st.session_state.all_models, key="preferred_model", index=1)
         st.selectbox("Select Personality", list(personas.keys()), key="personality")
         st.slider("Temperature", 0.0, 2.0, key="temperature")
         # Clear chat history button
