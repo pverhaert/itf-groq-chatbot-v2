@@ -108,7 +108,7 @@ def main():
             index = st.session_state.all_models.index(st.session_state.preferred_model)
         except ValueError:
             index = 0
-        st.selectbox("Select Preferred Model", st.session_state.all_models, key="preferred_model", index=index)
+        # st.selectbox("Select Preferred Model", st.session_state.all_models, key="preferred_model", index=index)
         st.selectbox("Select Personality", list(personas.keys()), key="personality")
         st.slider("Temperature", 0.0, 2.0, key="temperature")
         # Clear chat history button
