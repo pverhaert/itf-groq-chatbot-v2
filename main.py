@@ -21,11 +21,11 @@ load_dotenv()
 # -------------------
 default_states = {
     "groq_api_key": os.getenv("GROQ_API_KEY", None),
-    "preferred_model": os.getenv("PREFERRED_MODEL", "llama-3.1-70b-versatile"),
+    "preferred_model": os.getenv("PREFERRED_MODEL", "not-set-in-env"),
     "all_models": [],
     "personality": "General Chatbot",
     "temperature": 0.2,
-    "messages": []
+    "messages": [],
 }
 for key, value in default_states.items():
     if key not in st.session_state:
@@ -46,6 +46,7 @@ def fetch_models():
     os.write(1, b"Fetching models...\n")
     st.text('**************************')
     st.text(st.session_state.groq_api_key)
+    st.text(st.session_state.preferred_model)
     st.text('**************************')
     api_key = st.session_state.groq_api_key
     if not api_key:
@@ -66,7 +67,7 @@ def fetch_models():
     except requests.RequestException as e:
         st.error(f"Failed to fetch models: {str(e)}")
         return []
-# fetch_models()
+
 
 def update_session_states():
     sys_prompt = textwrap.dedent(personas[st.session_state.personality])
@@ -90,36 +91,28 @@ def main():
     # Sidebar
     with st.sidebar:
         st.title("Chat Settings")
-
         # API Key input
-        api_key = st.session_state.groq_api_key
         if st.session_state.groq_api_key is None:
             new_api_key = st.text_input("Enter Groq API Key", type="password")
             if new_api_key:
-                # update_delete_api_key(new_api_key)
                 st.session_state.groq_api_key = new_api_key
                 st.toast("API Key is saved", icon="✅")
-                # Models selection
+                st.rerun()
         else:
             st.session_state.all_models = fetch_models()
             if st.button("Clear API Key"):
                 st.session_state.groq_api_key = None
-                # fetch_models()
-                # st.rerun()
+                st.rerun()
+        # Add settings to the sidebar
         try:
             index = st.session_state.all_models.index(st.session_state.preferred_model)
         except ValueError:
             index = 0
-        st.session_state.preferred_model = st.selectbox("Select Preferred Model", st.session_state.all_models,
-                                                        index=index,
-                                                        on_change=update_session_states)
-        # Personalities selection
-        st.session_state.personality = st.selectbox("Select Personality", list(personas.keys()),
-                                                    on_change=update_session_states)
-        # Temperature slider
-        st.session_state.temperature = st.slider("Temperature", 0.0, 2.0, st.session_state.temperature, 0.3)
+        st.selectbox("Select Preferred Model", st.session_state.all_models, key="preferred_model", index=index)
+        st.selectbox("Select Personality", list(personas.keys()), key="personality")
+        st.slider("Temperature", 0.0, 2.0, key="temperature")
         # Clear chat history button
-        if st.button("Clear Chat History", type="primary"):
+        if st.button("Start a new conversation", type="primary"):
             st.session_state.messages = []
             update_session_states()
 
