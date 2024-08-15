@@ -35,11 +35,11 @@ for key, value in default_states.items():
 # -------------------
 # Functions
 # -------------------
-def update_delete_api_key(api_key):
-  if api_key:
-      st.session_state.groq_api_key = api_key
-  else:
-      st.session_state.groq_api_key = None
+# def update_delete_api_key(api_key):
+#   if api_key:
+#       st.session_state.groq_api_key = api_key
+#   else:
+#       st.session_state.groq_api_key = None
 
 @st.cache_data
 def fetch_models():
@@ -88,12 +88,14 @@ def main():
       if api_key is None:
           new_api_key = st.text_input("Enter Groq API Key", type="password")
           if new_api_key:
-              update_delete_api_key(new_api_key)
-              st.success("API Key is set")
+              # update_delete_api_key(new_api_key)
+              st.session_state.groq_api_key = new_api_key
+              st.toast("API Key is saved", icon="✅")
+              fetch_models()
       else:
           if st.button("Clear API Key"):
-              update_delete_api_key(None)
-              st.rerun()
+              st.session_state.groq_api_key = None
+              # st.rerun()
       try:
           index = st.session_state.all_models.index(st.session_state.preferred_model)
       except ValueError:
