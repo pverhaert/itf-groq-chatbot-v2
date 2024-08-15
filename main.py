@@ -56,7 +56,6 @@ def fetch_models():
 
 def update_session_states():
     sys_prompt = personas[st.session_state.personality]
-    st.write(sys_prompt)
     if len(st.session_state.messages) > 0:
         st.session_state.messages[0]["content"] = sys_prompt
     else:
