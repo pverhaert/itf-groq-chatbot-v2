@@ -1,7 +1,5 @@
-import random
 import textwrap
 import os
-import aiohttp
 import requests
 import groq
 import streamlit as st
