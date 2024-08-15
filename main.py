@@ -76,7 +76,7 @@ def stream_response(completion):
           yield chunk.choices[0].delta.content
 
 # Models selection
-st.session_state.all_models = fetch_models()
+# st.session_state.all_models = fetch_models()
 
 def main():
     # Sidebar
@@ -91,7 +91,8 @@ def main():
               # update_delete_api_key(new_api_key)
               st.session_state.groq_api_key = new_api_key
               st.toast("API Key is saved", icon="✅")
-              fetch_models()
+              # Models selection
+              st.session_state.all_models = fetch_models()
       else:
           if st.button("Clear API Key"):
               st.session_state.groq_api_key = None
