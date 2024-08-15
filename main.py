@@ -18,8 +18,8 @@ load_dotenv()
 # Init session states
 # -------------------
 default_states = {
-    "groq_api_key": os.getenv("GROQ_API_KEY", None),
-    "preferred_model": os.getenv("PREFERRED_MODEL", "llama-3.1-70b-versatile"),
+    "groq_api_key": os.getenv("GROQ_API_KEY"),
+    "preferred_model": os.getenv("PREFERRED_MODEL"),
     "all_models": [],
     "personality": "General Chatbot",
     "temperature": 0.2,
@@ -103,10 +103,12 @@ def main():
                 st.rerun()
         # Add settings to the sidebar
         try:
-            index = st.session_state.all_models.index(st.session_state.preferred_model)
+            pref_model = 'not-found'
+            index = st.session_state.all_models.index(pref_model)
         except ValueError:
             index = 0
-        st.selectbox("Select Preferred Model", st.session_state.all_models, key="preferred_model", index=1)
+        st.write(f"Preferred Model index: {index}")
+        st.session_state.preferred_model = st.selectbox("Select Preferred Model", st.session_state.all_models, index=index)
         st.selectbox("Select Personality", list(personas.keys()), key="personality")
         st.slider("Temperature", 0.0, 2.0, key="temperature")
         # Clear chat history button
