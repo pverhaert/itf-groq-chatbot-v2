@@ -82,9 +82,6 @@ def stream_response(completion):
             yield chunk.choices[0].delta.content
 
 
-# Models selection
-# st.session_state.all_models = fetch_models()
-
 def main():
     # Sidebar
     with st.sidebar:
@@ -101,19 +98,19 @@ def main():
             if st.button("Clear API Key"):
                 st.session_state.groq_api_key = None
                 st.rerun()
-        # Add settings to the sidebar
-        try:
-            pref_model = st.session_state.preferred_model
-            index = st.session_state.all_models.index(pref_model)
-        except ValueError:
-            index = 0
-        st.write(f"Preferred Model index: {index}")
-        st.session_state.preferred_model = st.selectbox("Select Preferred Model", st.session_state.all_models, index=index)
-        st.selectbox("Select Personality", list(personas.keys()), key="personality")
-        st.slider("Temperature", 0.0, 2.0, key="temperature")
-        # Clear chat history button
-        if st.button("Start a new conversation", type="primary"):
-            st.session_state.messages = []
+            # Add settings to the sidebar
+            try:
+                pref_model = st.session_state.preferred_model
+                index = st.session_state.all_models.index(pref_model)
+            except ValueError:
+                index = 0
+            st.session_state.preferred_model = st.selectbox("Select Preferred Model", st.session_state.all_models,
+                                                            index=index)
+            st.selectbox("Select Personality", list(personas.keys()), key="personality")
+            st.slider("Temperature", 0.0, 2.0, step=0.1, key="temperature")
+            # Clear chat history button
+            if st.button("Start a new conversation", type="primary"):
+                st.session_state.messages = []
             update_session_states()
 
     # Main chat interface
@@ -124,12 +121,12 @@ def main():
     # Display a warning if API key is not set
     if st.session_state.groq_api_key is None:
         st.error("""
-      Please enter your Groq API key in the sidebar to start chatting.   
-      - Login to [Groq](https://groq.com).
-      - Go to [API Keys](https://console.groq.com/keys).
-      - Create a new API key and enjoy chatting with Groq ;-)
-      - And best of all, it's **totally free**! 🎉
-      """)
+          Please enter your Groq API key in the sidebar to start chatting.   
+          - Login to [Groq](https://groq.com).
+          - Go to [API Keys](https://console.groq.com/keys).
+          - Create a new API key and enjoy chatting with Groq ;-)
+          - And best of all, it's **totally free**! 🎉
+          """)
     else:
         # Show chat history
         for msg in st.session_state.messages:
